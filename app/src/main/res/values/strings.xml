@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">Moviebag Assignment</string>
+    <string name="home">Home</string>
+    <string name="trending">Trending</string>
+    <string name="see_all">See all...</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="joker">Joker</string>
+    <string name="release_status">Release Status:</string>
+    <string name="release_date">Release Date:</string>
+    <string name="language">Language:</string>
+    <string name="some_of_the_desc_here">Some of the Desc Here</string>
+    <string name="synopsis">Synopsis</string>
+    <string name="production_house">Production House</string>
+    <string name="cast">Cast</string>
+    <string name="review">Review</string>
+    <string name="similar_movies">Similar Movies</string>
+    <string name="adam_louis">Adam Louis</string>
+    <string name="_10_12_2020">10-12-2020</string>
+    <string name="director">Director</string>
+    <string name="error_movies">Couldn\'t Find Movies</string>
+    <string name="error_movies_desc">We are sorry, we couldn\'t find what you are looking for, Please try again Later</string>
+    <string name="not_available">N/A</string>
+    <string name="couldnt_fetch">Couldn\'t fetch Cast</string>
+    <string name="cast_desc">We were not able to get cast for this Movie, Please try again later...</string>
+    <string name="review_error_title">Review Now Found</string>
+    <string name="review_error_desc">No reviews were found for this movie. Thanks for your time...</string>
+    <string name="moviedetail_title">Couldn\'t find this Movie Details</string>
+    <string name="moviedesc">We are sorry, but some of the details are missing from our End for this Movie, Please try Again Later...</string>
+</resources>
