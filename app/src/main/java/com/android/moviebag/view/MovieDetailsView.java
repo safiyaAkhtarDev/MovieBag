@@ -4,6 +4,7 @@ import com.android.moviebag.Models.MovieDetails;
 import com.android.moviebag.Models.MovieProvider;
 import com.android.moviebag.Models.NowPlayingMovies;
 import com.android.moviebag.Models.PopularMovies;
+import com.android.volley.VolleyError;
 
 import java.util.List;
 
@@ -15,7 +16,7 @@ public interface MovieDetailsView {
         void startLoading();
 
         void stopLoading();
-        void showLoadingError(String errMsg);
+        void showLoadingError(VolleyError errMsg);
     }
 
     interface MovieDetailsPresenter {
@@ -27,19 +28,19 @@ public interface MovieDetailsView {
     interface OnMovieDetailsResponseCallback {
         void onResponse(List<MovieDetails> movies);
 
-        void onError(String errMsg);
+        void onError(VolleyError errMsg);
     }
 
     interface OnMovieProviderResponseCallback {
         void onResponse(List<MovieProvider> movies);
 
-        void onError(String errMsg);
+        void onError(VolleyError errMsg);
     }
 
     interface OnSimilarMovieResponseCallback {
         void onResponse(List<PopularMovies> movies);
 
-        void onError(String errMsg);
+        void onError(VolleyError errMsg);
     }
 
 }

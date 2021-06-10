@@ -60,7 +60,7 @@ public final class NowPlayingMoviesImpl implements NowPlayingMoviesRepo {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                callback.onError(volleyError.getMessage());
+                callback.onError(volleyError);
             }
         });
         VolleyConf.getVolleySingleton(context).addToRequestQueue(request);

@@ -30,6 +30,9 @@ import com.android.moviebag.presenter.MovieDetailsPresenter;
 import com.android.moviebag.util.Constants;
 import com.android.moviebag.util.Util;
 import com.android.moviebag.view.MovieDetailsView;
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
+import com.android.volley.VolleyError;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -221,8 +224,15 @@ public class MovieDetailsFragment extends Fragment implements MovieDetailsView.V
     }
 
     @Override
-    public void showLoadingError(String errMsg) {
-        Util.errorDialog(getContext(), getString(R.string.moviedetail_title), getString(R.string.moviedesc));
+    public void showLoadingError(VolleyError errMsg) {
+        if (errMsg instanceof NoConnectionError) {
+            Util.noInternetDialog(getContext());
+        } else if (errMsg instanceof NetworkError) {
+            Util.noInternetDialog(getContext());
+        } else {
+            Util.errorDialog(getContext(), getString(R.string.moviedetail_title), getString(R.string.moviedesc));
+
+        }
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.android.moviebag.view;
 
 import com.android.moviebag.Models.Cast;
 import com.android.moviebag.Models.Review;
+import com.android.volley.VolleyError;
 
 import java.util.List;
 
@@ -9,7 +10,7 @@ public interface ReviewView {
 
     interface View {
         void showReviewDetails(List<Review> movies);
-        void showLoadingError(String errMsg);
+        void showLoadingError(VolleyError errMsg);
         void startLoading();
 
         void stopLoading();
@@ -23,7 +24,7 @@ public interface ReviewView {
     interface OnReviewResponseCallback {
         void onResponse(List<Review> movies);
 
-        void onError(String errMsg);
+        void onError(VolleyError errMsg);
     }
 
 }

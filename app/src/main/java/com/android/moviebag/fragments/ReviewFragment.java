@@ -22,6 +22,9 @@ import com.android.moviebag.presenter.CastPresenter;
 import com.android.moviebag.presenter.ReviewPresenter;
 import com.android.moviebag.util.Util;
 import com.android.moviebag.view.ReviewView;
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
+import com.android.volley.VolleyError;
 
 import java.util.List;
 
@@ -91,8 +94,15 @@ public class ReviewFragment extends Fragment implements ReviewView.View {
     }
 
     @Override
-    public void showLoadingError(String errMsg) {
-        Util.errorDialog(getContext(), getString(R.string.review_error_title), getString(R.string.review_error_desc));
+    public void showLoadingError(VolleyError errMsg) {
+        if (errMsg instanceof NoConnectionError) {
+            Util.noInternetDialog(getContext());
+        } else if (errMsg instanceof NetworkError) {
+            Util.noInternetDialog(getContext());
+        } else {
+            Util.errorDialog(getContext(), getString(R.string.review_error_title), getString(R.string.review_error_desc));
+
+        }
     }
 
     @Override

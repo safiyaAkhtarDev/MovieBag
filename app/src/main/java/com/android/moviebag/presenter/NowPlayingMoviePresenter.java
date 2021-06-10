@@ -8,6 +8,7 @@ import com.android.moviebag.Models.PopularMovies;
 import com.android.moviebag.repository.NowPlayingMoviesRepo;
 import com.android.moviebag.view.NowPlayingMovieView;
 import com.android.moviebag.view.PopularMovieView;
+import com.android.volley.VolleyError;
 
 import java.util.List;
 
@@ -46,7 +47,7 @@ public class NowPlayingMoviePresenter implements NowPlayingMovieView.NowPlayingP
         }
 
         @Override
-        public void onError(String errMsg) {
+        public void onError(VolleyError errMsg) {
             view.stopNowPlayingLoading();
             view.showLoadingError(errMsg);
         }

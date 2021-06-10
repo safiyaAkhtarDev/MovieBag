@@ -31,6 +31,9 @@ import com.android.moviebag.presenter.PopularMoviePresenter;
 import com.android.moviebag.util.Util;
 import com.android.moviebag.view.NowPlayingMovieView;
 import com.android.moviebag.view.PopularMovieView;
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
+import com.android.volley.VolleyError;
 import com.google.android.material.tabs.TabLayout;
 import com.viewpagerindicator.CirclePageIndicator;
 
@@ -118,7 +121,9 @@ public class DashboardFragment extends Fragment implements PopularMovieView.View
                     if (currentpage <= total_pages) {
                         currentpage++;
                         loading = false;
+
                         presenter.loadMoviewList(currentpage);
+
                     }
 
                 }
@@ -218,10 +223,18 @@ public class DashboardFragment extends Fragment implements PopularMovieView.View
         Util.hideProgressDialog();
     }
 
+
     @Override
-    public void showLoadingError(String errMsg) {
-        Util.errorDialog(getContext(), getString(R.string.error_movies),
-                getString(R.string.error_movies_desc));
+    public void showLoadingError(VolleyError errMsg) {
+        if (errMsg instanceof NoConnectionError) {
+            Util.noInternetDialog(getContext());
+        } else if (errMsg instanceof NetworkError) {
+            Util.noInternetDialog(getContext());
+        } else {
+            Util.errorDialog(getContext(), getString(R.string.error_movies),
+                    getString(R.string.error_movies_desc));
+        }
+
     }
 
 

@@ -1,6 +1,7 @@
 package com.android.moviebag.view;
 
 import com.android.moviebag.Models.PopularMovies;
+import com.android.volley.VolleyError;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ public interface PopularMovieView {
 
         void showMovieList(List<PopularMovies> movies, int total_pages);
 
-        void showLoadingError(String errMsg);
+        void showLoadingError(VolleyError errMsg);
     }
     interface Presenter {
         void loadMoviewList(int currentpage);
@@ -23,7 +24,7 @@ public interface PopularMovieView {
     interface OnResponseCallback {
         void onResponse(List<PopularMovies> movies, int total_pages);
 
-        void onError(String errMsg);
+        void onError(VolleyError errMsg);
     }
 
 }

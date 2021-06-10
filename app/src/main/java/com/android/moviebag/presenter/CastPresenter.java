@@ -9,6 +9,7 @@ import com.android.moviebag.repository.CastRepo;
 import com.android.moviebag.repository.MoviesDetailsRepo;
 import com.android.moviebag.view.CastView;
 import com.android.moviebag.view.MovieDetailsView;
+import com.android.volley.VolleyError;
 
 import java.util.List;
 
@@ -46,7 +47,7 @@ public class CastPresenter implements CastView.CastPresenter {
         }
 
         @Override
-        public void onError(String errMsg) {
+        public void onError(VolleyError errMsg) {
             view.stopLoading();
             view.showLoadingError(errMsg);
 

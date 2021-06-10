@@ -4,6 +4,7 @@ import com.android.moviebag.Models.Cast;
 import com.android.moviebag.Models.MovieDetails;
 import com.android.moviebag.Models.MovieProvider;
 import com.android.moviebag.Models.PopularMovies;
+import com.android.volley.VolleyError;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ public interface CastView {
         void startLoading();
 
         void stopLoading();
-        void showLoadingError(String errMsg);
+        void showLoadingError(VolleyError errMsg);
     }
 
     interface CastPresenter {
@@ -26,7 +27,7 @@ public interface CastView {
     interface OnCastResponseCallback {
         void onResponse(List<Cast> movies);
 
-        void onError(String errMsg);
+        void onError(VolleyError errMsg);
     }
 
 }

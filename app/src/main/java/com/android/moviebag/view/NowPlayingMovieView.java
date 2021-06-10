@@ -2,6 +2,7 @@ package com.android.moviebag.view;
 
 import com.android.moviebag.Models.NowPlayingMovies;
 import com.android.moviebag.Models.PopularMovies;
+import com.android.volley.VolleyError;
 
 import java.util.List;
 
@@ -13,7 +14,7 @@ public interface NowPlayingMovieView {
         void startNowPlayingLoading();
 
         void stopNowPlayingLoading();
-        void showLoadingError(String errMsg);
+        void showLoadingError(VolleyError errMsg);
     }
 
     interface NowPlayingPresenter {
@@ -25,7 +26,7 @@ public interface NowPlayingMovieView {
     interface OnNowPlayingResponseCallback {
         void onResponse(List<NowPlayingMovies> movies);
 
-        void onError(String errMsg);
+        void onError(VolleyError errMsg);
     }
 
 }

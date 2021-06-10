@@ -26,6 +26,9 @@ import com.android.moviebag.presenter.MovieDetailsPresenter;
 import com.android.moviebag.util.Util;
 import com.android.moviebag.view.CastView;
 import com.android.moviebag.view.MovieDetailsView;
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
+import com.android.volley.VolleyError;
 
 import java.util.List;
 
@@ -117,7 +120,14 @@ public class CastFragment extends Fragment implements CastView.View {
     }
 
     @Override
-    public void showLoadingError(String errMsg) {
-        Util.errorDialog(getContext(), getString(R.string.couldnt_fetch), getString(R.string.cast_desc));
+    public void showLoadingError(VolleyError errMsg) {
+        if (errMsg instanceof NoConnectionError) {
+            Util.noInternetDialog(getContext());
+        } else if (errMsg instanceof NetworkError) {
+            Util.noInternetDialog(getContext());
+        } else {
+            Util.errorDialog(getContext(), getString(R.string.couldnt_fetch), getString(R.string.cast_desc));
+
+        }
     }
 }

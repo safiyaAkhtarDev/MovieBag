@@ -6,7 +6,10 @@ import android.util.Log;
 import com.android.moviebag.util.Constants;
 import com.android.moviebag.Models.PopularMovies;
 import com.android.moviebag.repository.PopularMoviesRepo;
+import com.android.moviebag.util.Util;
 import com.android.moviebag.view.PopularMovieView;
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
@@ -55,7 +58,9 @@ public final class PopularMoviesImpl implements PopularMoviesRepo {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                callback.onError(volleyError.getMessage());
+
+                callback.onError(volleyError);
+
             }
         });
         VolleyConf.getVolleySingleton(context).addToRequestQueue(request);

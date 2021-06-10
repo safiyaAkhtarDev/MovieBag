@@ -6,6 +6,7 @@ import android.util.Log;
 import com.android.moviebag.Models.PopularMovies;
 import com.android.moviebag.repository.PopularMoviesRepo;
 import com.android.moviebag.view.PopularMovieView;
+import com.android.volley.VolleyError;
 
 import java.util.List;
 
@@ -21,12 +22,13 @@ public class PopularMoviePresenter implements PopularMovieView.Presenter {
         this.popularMoviesRepo = popularMoviesRepo;
     }
 
-
     @Override
     public void loadMoviewList(int currentpage) {
+        // required for espresso UI testing
+//        EspressoTestingIdlingResource.increment();
         view.startLoading();
-        Log.d("safiyas","loadMoviewList");
         popularMoviesRepo.getPopularMovieList(currentpage, callback);
+
     }
 
     @Override
@@ -38,14 +40,17 @@ public class PopularMoviePresenter implements PopularMovieView.Presenter {
     private final PopularMovieView.OnResponseCallback callback = new PopularMovieView.OnResponseCallback() {
         @Override
         public void onResponse(List<PopularMovies> movies, int total_pages) {
-            view.showMovieList(movies,total_pages);
+            view.showMovieList(movies, total_pages);
             view.stopLoading();
+
+
         }
 
         @Override
-        public void onError(String errMsg) {
+        public void onError(VolleyError errMsg) {
             view.stopLoading();
             view.showLoadingError(errMsg);
+
         }
     };
 }

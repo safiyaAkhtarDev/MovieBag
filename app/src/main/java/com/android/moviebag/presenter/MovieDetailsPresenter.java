@@ -10,6 +10,7 @@ import com.android.moviebag.repository.MoviesDetailsRepo;
 import com.android.moviebag.repository.NowPlayingMoviesRepo;
 import com.android.moviebag.view.MovieDetailsView;
 import com.android.moviebag.view.NowPlayingMovieView;
+import com.android.volley.VolleyError;
 
 import java.util.List;
 
@@ -48,7 +49,7 @@ public class MovieDetailsPresenter implements MovieDetailsView.MovieDetailsPrese
         }
 
         @Override
-        public void onError(String errMsg) {
+        public void onError(VolleyError errMsg) {
             view.stopLoading();
             view.showLoadingError(errMsg);
 
@@ -62,7 +63,7 @@ public class MovieDetailsPresenter implements MovieDetailsView.MovieDetailsPrese
         }
 
         @Override
-        public void onError(String errMsg) {
+        public void onError(VolleyError errMsg) {
 
             view.showLoadingError(errMsg);
         }
