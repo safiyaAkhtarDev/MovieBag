@@ -3,7 +3,7 @@
 Features:
 1. Paginated Popular Movies
 2. Now Playing Movies with Circle Indicator Dots and auto swiping feature
-3. Convert incoming date to desirable format
+3. Convert incoming date to proper format
 4. Change "en" the language code to language name using Local
 5. Parallax Scrolling with CollapseToolbar in movie details screen
 6. Fragment with transaction animations
