@@ -17,6 +17,7 @@ Features:
 14. Exception Handling
 15. <b>Model View Presenter</b> design architecture used for clean code
 16. Attached a Logo (for demo Purpose)
+17. Placeholder images
 
 
 Decisions:
