@@ -4,10 +4,13 @@ import android.os.Bundle;
 
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
+import androidx.core.os.HandlerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,10 +34,8 @@ import it.gmariotti.recyclerview.adapter.ScaleInAnimatorAdapter;
 public class CastFragment extends Fragment implements CastView.View {
 
     private String movieid;
-    AppCompatImageView imgCast;
     AppCompatImageView imgBack;
-    AppCompatTextView txtName;
-    AppCompatTextView txtJob;
+    AppCompatImageView imgNoData;
     RecyclerView recyclerCast;
     private View view;
 
@@ -55,11 +56,10 @@ public class CastFragment extends Fragment implements CastView.View {
     }
 
     private void initViews() {
-        imgCast = view.findViewById(R.id.imgCast);
-        txtName = view.findViewById(R.id.txtName);
-        txtJob = view.findViewById(R.id.txtJob);
-        imgBack = view.findViewById(R.id.imgBack);
+
         recyclerCast = view.findViewById(R.id.recyclerCast);
+        imgNoData = view.findViewById(R.id.imgNoData);
+        imgBack = view.findViewById(R.id.imgBack);
 
         imgBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,7 +89,21 @@ public class CastFragment extends Fragment implements CastView.View {
 
     @Override
     public void showCastDetails(List<Cast> movies) {
-        adapter.setList(movies);
+        Handler mainThreadHandler = HandlerCompat.createAsync(Looper.getMainLooper());
+        mainThreadHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (movies != null && movies.size() > 0) {
+                    adapter.setList(movies);
+                    recyclerCast.setVisibility(View.VISIBLE);
+                    imgNoData.setVisibility(View.GONE);
+                } else {
+                    imgNoData.setVisibility(View.VISIBLE);
+                    recyclerCast.setVisibility(View.GONE);
+                }
+            }
+        });
+
     }
 
     @Override

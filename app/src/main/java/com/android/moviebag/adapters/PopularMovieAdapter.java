@@ -44,33 +44,40 @@ public class PopularMovieAdapter extends RecyclerView.Adapter<PopularMovieAdapte
 
     @Override
     public void onBindViewHolder(MovieHolder holder, final int position) {
-        Log.e(TAG, "onBindViewHolder: " + position);
-        holder.txtMovieName.setText(movStrings.get(position).getTitle());
-        Locale loc = new Locale(movStrings.get(position).getOriginal_language());
-        holder.txtLanguageValue.setText(loc.getDisplayLanguage(loc));
-        if (movStrings.get(position).getRelease_date().equalsIgnoreCase("")) {
-            holder.txtReleaseValue.setText("N/A");
-        }else{
-            holder.txtReleaseValue.setText(Util.dateFormat(movStrings.get(position).getRelease_date()));
-        }
-        holder.txtRatingText.setText(movStrings.get(position).getVote_average() + "");
-        String imagePath = Constants.URL_IMAGE_185 + movStrings.get(position).getPoster_path();
 
-        Picasso.get().load(imagePath).placeholder(R.drawable.default_image).fit().into(holder.imgMovie);
-
-        holder.ratingBar.setRating(movStrings.get(position).getVote_average());
-
-        holder.cardParent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Bundle bundle = new Bundle();
-                bundle.putString("id", String.valueOf(movStrings.get(position).getId()));
-                ((MainActivity) context).getSupportFragmentManager().beginTransaction()
-                        .add(R.id.container, MovieDetailsFragment.class, bundle)
-                        .addToBackStack(null)
-                        .commit();
+        try {
+            Log.e(TAG, "onBindViewHolder: " + position);
+            holder.txtMovieName.setText(movStrings.get(position).getTitle());
+            Locale loc = new Locale(movStrings.get(position).getOriginal_language());
+            holder.txtLanguageValue.setText(loc.getDisplayLanguage(loc));
+            if (movStrings.get(position).getRelease_date() != null
+                    && !movStrings.get(position).getRelease_date().equalsIgnoreCase("")) {
+                holder.txtReleaseValue.setText(Util.dateFormat(movStrings.get(position).getRelease_date()));
+            } else {
+                holder.txtReleaseValue.setText("N/A");
             }
-        });
+            holder.txtRatingText.setText(movStrings.get(position).getVote_average() + "");
+            String imagePath = Constants.URL_IMAGE_185 + movStrings.get(position).getPoster_path();
+
+            Picasso.get().load(imagePath).placeholder(R.drawable.default_image).fit().into(holder.imgMovie);
+
+            holder.ratingBar.setRating(movStrings.get(position).getVote_average());
+
+            holder.cardParent.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("id", String.valueOf(movStrings.get(position).getId()));
+                    ((MainActivity) context).getSupportFragmentManager().beginTransaction()
+                            .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
+                            .add(R.id.container, MovieDetailsFragment.class, bundle)
+                            .addToBackStack(null)
+                            .commit();
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void setList(List<PopularMovies> list) {

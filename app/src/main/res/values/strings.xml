@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Moviebag Assignment</string>
+    <string name="app_name">MovieBag</string>
     <string name="home">Home</string>
     <string name="trending">Trending</string>
     <string name="see_all">See all...</string>

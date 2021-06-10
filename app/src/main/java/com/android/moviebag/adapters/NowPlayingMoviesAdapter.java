@@ -58,37 +58,42 @@ public class NowPlayingMoviesAdapter extends PagerAdapter {
     public Object instantiateItem(ViewGroup view, int position) {
         View views = inflater.inflate(R.layout.now_playing_movie_pager, view, false);
 
-        assert views != null;
-        ConstraintLayout cardParent = (ConstraintLayout) views
-                .findViewById(R.id.cardParent);
-        AppCompatImageView imageView = (AppCompatImageView) views
-                .findViewById(R.id.imgNowPlayingMovies);
-        AppCompatTextView txtMovieName = (AppCompatTextView) views
-                .findViewById(R.id.txtMovieName);
-        AppCompatTextView txtReleaseValue = (AppCompatTextView) views
-                .findViewById(R.id.txtReleaseValue);
+        try {
+            assert views != null;
+            ConstraintLayout cardParent = (ConstraintLayout) views
+                    .findViewById(R.id.cardParent);
+            AppCompatImageView imageView = (AppCompatImageView) views
+                    .findViewById(R.id.imgNowPlayingMovies);
+            AppCompatTextView txtMovieName = (AppCompatTextView) views
+                    .findViewById(R.id.txtMovieName);
+            AppCompatTextView txtReleaseValue = (AppCompatTextView) views
+                    .findViewById(R.id.txtReleaseValue);
 
-        txtMovieName.setText(nowPlayingMoviesArrayList.get(position).getOriginal_title());
-        txtReleaseValue.setText(Util.dateFormat(nowPlayingMoviesArrayList.get(position).getRelease_date()));
+            txtMovieName.setText(nowPlayingMoviesArrayList.get(position).getOriginal_title());
+            txtReleaseValue.setText(Util.dateFormat(nowPlayingMoviesArrayList.get(position).getRelease_date()));
 
-        Picasso.get()
-                .load(Constants.URL_IMAGE_200 + nowPlayingMoviesArrayList.get(position).getPoster_path())
-                .fit().centerInside()
-                .into(imageView);
+            Picasso.get()
+                    .load(Constants.URL_IMAGE_500 + nowPlayingMoviesArrayList.get(position).getPoster_path())
+                    .fit().centerInside()
+                    .into(imageView);
 
-        cardParent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Bundle bundle = new Bundle();
-                bundle.putString("id", String.valueOf(nowPlayingMoviesArrayList.get(position).getId()));
-                ((MainActivity) context).getSupportFragmentManager().beginTransaction()
-                        .add(R.id.container, MovieDetailsFragment.class, bundle)
-                        .addToBackStack(null)
-                        .commit();
-            }
-        });
+            cardParent.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("id", String.valueOf(nowPlayingMoviesArrayList.get(position).getId()));
+                    ((MainActivity) context).getSupportFragmentManager().beginTransaction()
+                            .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
+                            .add(R.id.container, MovieDetailsFragment.class, bundle)
+                            .addToBackStack(null)
+                            .commit();
+                }
+            });
 
-        view.addView(views, 0);
+            view.addView(views, 0);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return views;
     }

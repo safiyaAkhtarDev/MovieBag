@@ -37,14 +37,18 @@ public class CastAdapter extends RecyclerView.Adapter<CastAdapter.MovieHolder> {
 
     @Override
     public void onBindViewHolder(MovieHolder holder, final int position) {
-        String imagePath = Constants.URL_IMAGE_185 + castArrayList.get(position).getProfile_path();
-        Picasso.get().load(imagePath).placeholder(R.drawable.default_image).fit().into(holder.imgCast);
-        if (castArrayList.get(position).getJob() == null) {
-            holder.txtJob.setText(castArrayList.get(position).getKnown_for_department());
-        } else {
-            holder.txtJob.setText(castArrayList.get(position).getJob());
+        try {
+            String imagePath = Constants.URL_IMAGE_185 + castArrayList.get(position).getProfile_path();
+            Picasso.get().load(imagePath).placeholder(R.drawable.default_image).fit().into(holder.imgCast);
+            if (castArrayList.get(position).getJob() == null) {
+                holder.txtJob.setText(castArrayList.get(position).getKnown_for_department());
+            } else {
+                holder.txtJob.setText(castArrayList.get(position).getJob());
+            }
+            holder.txtName.setText(castArrayList.get(position).getName());
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        holder.txtName.setText(castArrayList.get(position).getName());
 
     }
 
@@ -52,15 +56,6 @@ public class CastAdapter extends RecyclerView.Adapter<CastAdapter.MovieHolder> {
         castArrayList.clear();
         castArrayList.addAll(list);
         notifyDataSetChanged();
-
-    }
-
-    public void updateList(List<Cast> list) {
-//        movStrings.clear();
-        ArrayList<Cast> list1 = new ArrayList<>();
-        list1 = (ArrayList<Cast>) castArrayList;
-        castArrayList.addAll(list);
-        notifyItemRangeInserted(list1.size(), castArrayList.size());
 
     }
 

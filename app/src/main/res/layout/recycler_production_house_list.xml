@@ -4,13 +4,12 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/_10sdp"
-    android:layout_marginEnd="@dimen/_8sdp"
     android:layout_marginBottom="@dimen/_16sdp"
     android:background="@color/transparent">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardMain"
-        android:layout_width="@dimen/_130sdp"
+        android:layout_width="@dimen/_110sdp"
         android:layout_height="@dimen/_80sdp"
         android:background="@color/transparent"
         android:elevation="0dp"
@@ -24,13 +23,14 @@
             android:id="@+id/imgProductionaHouse"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="@dimen/_10sdp"></androidx.appcompat.widget.AppCompatImageView>
+            android:padding="@dimen/_10sdp"
+            android:scaleType="fitXY"></androidx.appcompat.widget.AppCompatImageView>
     </androidx.cardview.widget.CardView>
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/txtProviderName"
         style="@style/MovieTitleText"
-        android:layout_width="@dimen/_140sdp"
+        android:layout_width="@dimen/_110sdp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_10sdp"
         android:gravity="center_horizontal"

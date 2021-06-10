@@ -38,9 +38,9 @@
             <androidx.viewpager.widget.ViewPager
                 android:id="@+id/mainPager"
                 android:layout_width="match_parent"
+                android:layout_height="@dimen/_190sdp"
                 android:layout_marginStart="@dimen/_10sdp"
                 android:layout_marginEnd="@dimen/_10sdp"
-                android:layout_height="@dimen/_190sdp"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <com.viewpagerindicator.CirclePageIndicator

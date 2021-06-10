@@ -38,21 +38,26 @@ public class SimilarMoviesAdapter extends RecyclerView.Adapter<SimilarMoviesAdap
 
     @Override
     public void onBindViewHolder(MovieHolder holder, final int position) {
-        String imagePath = Constants.URL_IMAGE_200 + movStrings.get(position).getPoster_path();
+        try {
+            String imagePath = Constants.URL_IMAGE_500 + movStrings.get(position).getPoster_path();
 
-        Picasso.get().load(imagePath).placeholder(R.drawable.default_image).fit().into(holder.imgSimilarMovies);
+            Picasso.get().load(imagePath).placeholder(R.drawable.default_image).fit().into(holder.imgSimilarMovies);
 
-        holder.imgSimilarMovies.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Bundle bundle = new Bundle();
-                bundle.putString("id", String.valueOf(movStrings.get(position).getId()));
-                ((MainActivity) context).getSupportFragmentManager().beginTransaction()
-                        .add(R.id.container, MovieDetailsFragment.class, bundle)
-                        .addToBackStack(null)
-                        .commit();
-            }
-        });
+            holder.imgSimilarMovies.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("id", String.valueOf(movStrings.get(position).getId()));
+                    ((MainActivity) context).getSupportFragmentManager().beginTransaction()
+                            .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
+                            .add(R.id.container, MovieDetailsFragment.class, bundle)
+                            .addToBackStack(null)
+                            .commit();
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void setList(List<PopularMovies> list) {

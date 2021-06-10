@@ -41,12 +41,16 @@ public class MovieProviderAdapter extends RecyclerView.Adapter<MovieProviderAdap
 
     @Override
     public void onBindViewHolder(MovieHolder holder, final int position) {
-        String imagePath = Constants.URL_IMAGE_185 + movStrings.get(position).getLogo_path();
-        Picasso.get().load(imagePath)
-                .placeholder(R.drawable.default_image)
-                .fit().into(holder.imgProductionaHouse);
+        try {
+            String imagePath = Constants.URL_IMAGE_500 + movStrings.get(position).getLogo_path();
+            Picasso.get().load(imagePath)
+                    .placeholder(R.drawable.default_image)
+                    .fit().into(holder.imgProductionaHouse);
 
-        holder.txtProviderName.setText(movStrings.get(position).getName());
+            holder.txtProviderName.setText(movStrings.get(position).getName());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void setList(List<MovieProvider> list) {

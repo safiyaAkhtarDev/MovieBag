@@ -5,35 +5,33 @@ import android.os.Bundle;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.os.HandlerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.text.TextUtils;
-import android.util.Log;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.RatingBar;
 import android.widget.ScrollView;
 
 import com.android.moviebag.MainActivity;
 import com.android.moviebag.Models.MovieDetails;
-import com.android.moviebag.Models.MovieProvider;
 import com.android.moviebag.Models.PopularMovies;
 import com.android.moviebag.R;
 import com.android.moviebag.adapters.MovieProviderAdapter;
 import com.android.moviebag.adapters.SimilarMoviesAdapter;
 import com.android.moviebag.classes.MoviesDetailsImpl;
 import com.android.moviebag.presenter.MovieDetailsPresenter;
-import com.android.moviebag.repository.MoviesDetailsRepo;
 import com.android.moviebag.util.Constants;
 import com.android.moviebag.util.Util;
 import com.android.moviebag.view.MovieDetailsView;
 import com.squareup.picasso.Picasso;
 
-import java.time.chrono.JapaneseDate;
 import java.util.List;
 import java.util.Locale;
 
@@ -49,8 +47,10 @@ public class MovieDetailsFragment extends Fragment implements MovieDetailsView.V
     AppCompatTextView txtMovieDescription;
     AppCompatTextView txtMovieProductionHouse;
     AppCompatTextView txtReleaseStatusValue;
+    AppCompatTextView txtSimilarMovies;
     RecyclerView recyclerProductionHouse;
     RecyclerView recyclerSimilarMovies;
+    CoordinatorLayout clParent;
     AppCompatButton btnCast;
     AppCompatButton btnReview;
     ScrollView scrollView;
@@ -93,7 +93,8 @@ public class MovieDetailsFragment extends Fragment implements MovieDetailsView.V
         imgMovie = view.findViewById(R.id.imgMovie);
         titleMovie = view.findViewById(R.id.titleMovie);
         imgBack = view.findViewById(R.id.imgBack);
-//        scrollView = view.findViewById(R.id.scrollView);
+        clParent = view.findViewById(R.id.clParent);
+        txtSimilarMovies = view.findViewById(R.id.txtSimilarMovies);
         recyclerProductionHouse = view.findViewById(R.id.recyclerProductionHouse);
         recyclerSimilarMovies = view.findViewById(R.id.recyclerSimilarMovies);
 
@@ -103,14 +104,12 @@ public class MovieDetailsFragment extends Fragment implements MovieDetailsView.V
         txtLanguageValue = view.findViewById(R.id.txtLanguageValue);
         txtReleaseStatusValue = view.findViewById(R.id.txtReleaseStatusValue);
 
-
         imgBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ((MainActivity) getContext()).onBackPressed();
             }
         });
-
 
         recyclerProductionHouse.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
         recyclerSimilarMovies.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
@@ -135,6 +134,7 @@ public class MovieDetailsFragment extends Fragment implements MovieDetailsView.V
                 Bundle bundle = new Bundle();
                 bundle.putString("id", movieid);
                 ((MainActivity) getContext()).getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
                         .add(R.id.container, CastFragment.class, bundle)
                         .addToBackStack(null)
                         .commit();
@@ -147,9 +147,47 @@ public class MovieDetailsFragment extends Fragment implements MovieDetailsView.V
                 Bundle bundle = new Bundle();
                 bundle.putString("id", movieid);
                 ((MainActivity) getContext()).getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
                         .add(R.id.container, ReviewFragment.class, bundle)
                         .addToBackStack(null)
                         .commit();
+            }
+        });
+    }
+
+    @Override
+    public void showMovieDetails(List<MovieDetails> movieDetailsList) {
+        Handler mainThreadHandler = HandlerCompat.createAsync(Looper.getMainLooper());
+        mainThreadHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (movieDetailsList != null && movieDetailsList.size() > 0) {
+                    MovieDetails movies = movieDetailsList.get(0);
+                    titleMovie.setText(movies.getTitle());
+                    txtReleaseStatusValue.setText(movies.getStatus());
+                    Locale loc = new Locale(movies.getOriginal_language());
+                    txtLanguageValue.setText(loc.getDisplayLanguage(loc));
+                    txtReleaseValue.setText(Util.dateFormat(movies.getRelease_date()));
+                    if (movies.getOverview() != "") {
+                        txtMovieDescription.setText(movies.getOverview());
+                    } else {
+                        txtMovieDescription.setText(getString(R.string.not_available));
+                    }
+
+                    txtRatingText.setText(movies.getVote_average() + "");
+                    ratingBar.setRating(movies.getVote_average());
+                    String imagePath = Constants.URL_IMAGE_500 + movies.getPoster_path();
+                    Picasso.get().load(imagePath).placeholder(R.drawable.default_image).fit().into(imgMovie);
+
+                    if (movies.getProduction_companies() != null && movies.getProduction_companies().size() > 0) {
+                        movieProviderAdapter.setList(movies.getProduction_companies());
+                    } else {
+                        txtMovieProductionHouse.setText(getString(R.string.production_house) + ": N/A");
+                        recyclerProductionHouse.setVisibility(View.GONE);
+                    }
+                } else {
+                    Util.errorDialog(getContext(), getString(R.string.moviedetail_title), getString(R.string.moviedesc));
+                }
             }
         });
 
@@ -157,36 +195,19 @@ public class MovieDetailsFragment extends Fragment implements MovieDetailsView.V
     }
 
     @Override
-    public void showMovieDetails(List<MovieDetails> movieDetailsList) {
-        MovieDetails movies = movieDetailsList.get(0);
-        titleMovie.setText(movies.getTitle());
-        txtReleaseStatusValue.setText(movies.getStatus());
-        Locale loc = new Locale(movies.getOriginal_language());
-        txtLanguageValue.setText(loc.getDisplayLanguage(loc));
-        txtReleaseValue.setText(Util.dateFormat(movies.getRelease_date()));
-        if (movies.getOverview() != "") {
-            txtMovieDescription.setText(movies.getOverview());
-        } else {
-            txtMovieDescription.setText(getString(R.string.not_available));
-        }
-
-        txtRatingText.setText(movies.getVote_average() + "");
-        ratingBar.setRating(movies.getVote_average());
-        String imagePath = Constants.URL_IMAGE_200 + movies.getPoster_path();
-        Picasso.get().load(imagePath).placeholder(R.drawable.default_image).fit().into(imgMovie);
-
-        if (movies.getProduction_companies() != null && movies.getProduction_companies().size() > 0) {
-            movieProviderAdapter.setList(movies.getProduction_companies());
-        } else {
-            txtMovieProductionHouse.setText(getString(R.string.production_house) + ": N/A");
-            recyclerProductionHouse.setVisibility(View.GONE);
-        }
-
-    }
-
-    @Override
     public void showSimilarMovieDetails(List<PopularMovies> movies) {
-        similarMoviesAdapter.setList(movies);
+        Handler mainThreadHandler = HandlerCompat.createAsync(Looper.getMainLooper());
+        mainThreadHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (movies != null && movies.size() > 0) {
+                    similarMoviesAdapter.setList(movies);
+                } else {
+                    txtSimilarMovies.setText(getString(R.string.not_available));
+                }
+            }
+        });
+
     }
 
     @Override

@@ -16,7 +16,8 @@ public class NowPlayingMoviePresenter implements NowPlayingMovieView.NowPlayingP
     private Context context;
     NowPlayingMoviesRepo nowPlayingMoviesRepo;
 
-    public NowPlayingMoviePresenter(Context context, NowPlayingMovieView.NowPlayingView view, NowPlayingMoviesRepo nowPlayingMoviesRepo) {
+    public NowPlayingMoviePresenter(Context context, NowPlayingMovieView.NowPlayingView view,
+                                    NowPlayingMoviesRepo nowPlayingMoviesRepo) {
 
         this.view = view;
         this.context = context;
@@ -36,12 +37,12 @@ public class NowPlayingMoviePresenter implements NowPlayingMovieView.NowPlayingP
 
     }
 
-    private final NowPlayingMovieView.OnNowPlayingResponseCallback callback = new NowPlayingMovieView.OnNowPlayingResponseCallback() {
+    private final NowPlayingMovieView.OnNowPlayingResponseCallback callback =
+            new NowPlayingMovieView.OnNowPlayingResponseCallback() {
         @Override
         public void onResponse(List<NowPlayingMovies> movies) {
             view.stopNowPlayingLoading();
             view.showNowPlayingMovieList(movies);
-
         }
 
         @Override

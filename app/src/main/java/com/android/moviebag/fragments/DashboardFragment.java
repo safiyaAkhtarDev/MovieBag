@@ -4,6 +4,7 @@ import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.RequiresApi;
+import androidx.core.os.HandlerCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,6 +60,8 @@ public class DashboardFragment extends Fragment implements PopularMovieView.View
     private int currentPageSlider;
     private Timer swipeTimer;
     CirclePageIndicator mainViewPagerCountDots;
+
+    boolean loading = true;
 
     public DashboardFragment() {
         // Required empty public constructor
@@ -113,6 +117,7 @@ public class DashboardFragment extends Fragment implements PopularMovieView.View
                     //  pagination code
                     if (currentpage <= total_pages) {
                         currentpage++;
+                        loading = false;
                         presenter.loadMoviewList(currentpage);
                     }
 
@@ -136,56 +141,71 @@ public class DashboardFragment extends Fragment implements PopularMovieView.View
 
     @Override
     public void showMovieList(List<PopularMovies> movies, int total_pages) {
-        if (!movies.isEmpty()) {
-            this.total_pages = total_pages;
-            if (currentpage <= 1) {
-                popularMovieAdapter.setList(movies);
-            } else if (currentpage <= total_pages) {
-                popularMovieAdapter.updateList(movies);
+        Handler mainThreadHandler = HandlerCompat.createAsync(Looper.getMainLooper());
+        mainThreadHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (!movies.isEmpty()) {
+                    loading = true;
+                    DashboardFragment.this.total_pages = total_pages;
+                    if (currentpage <= 1) {
+                        popularMovieAdapter.setList(movies);
+                    } else if (currentpage <= total_pages) {
+                        popularMovieAdapter.updateList(movies);
+                    }
+                }
             }
-        }
+        });
+
     }
 
     @Override
     public void showNowPlayingMovieList(List<NowPlayingMovies> movies) {
-        if (!movies.isEmpty()) {
-            nowPlayingMoviesAdapter.setList(movies);
-            NUM_PAGES = movies.size();
+        Handler mainThreadHandler = HandlerCompat.createAsync(Looper.getMainLooper());
+        mainThreadHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (!movies.isEmpty()) {
+                    nowPlayingMoviesAdapter.setList(movies);
+                    NUM_PAGES = movies.size();
 
-            // Auto start of viewpager
-            final Handler handler = new Handler();
-            final Runnable Update = new Runnable() {
-                public void run() {
+                    // Auto start of viewpager
+                    final Handler handler = new Handler();
+                    final Runnable Update = new Runnable() {
+                        public void run() {
+                            try {
+
+                                if (currentPageSlider == NUM_PAGES) {
+                                    currentPageSlider = 0;
+                                }
+                                if (mainPager != null) {
+                                    mainPager.setCurrentItem(currentPageSlider++, true);
+                                }
+                            } catch (Exception e) {
+
+                                e.printStackTrace();
+                            }
+                        }
+                    };
+                    mainViewPagerCountDots.setViewPager(mainPager);
+
                     try {
-
-                        if (currentPageSlider == NUM_PAGES) {
-                            currentPageSlider = 0;
-                        }
-                        if (mainPager != null) {
-                            mainPager.setCurrentItem(currentPageSlider++, true);
-                        }
+                        swipeTimer = new Timer();
+                        swipeTimer.schedule(new TimerTask() {
+                            @Override
+                            public void run() {
+                                handler.post(Update);
+                            }
+                        }, 3000, 3000);
                     } catch (Exception e) {
-
                         e.printStackTrace();
                     }
+
+
                 }
-            };
-            mainViewPagerCountDots.setViewPager(mainPager);
-
-            try {
-                swipeTimer = new Timer();
-                swipeTimer.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        handler.post(Update);
-                    }
-                }, 3000, 3000);
-            } catch (Exception e) {
-                e.printStackTrace();
             }
+        });
 
-
-        }
     }
 
     @Override
